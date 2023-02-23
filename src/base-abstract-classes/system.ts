@@ -1,5 +1,5 @@
-import Entity from "./base-classes/entity";
-import EntitySystemManager from "./base-classes/entity-system-manager"
+import Entity from "./entity";
+import EntitySystemManager from "./entity-system-manager"
 
 export default abstract class System {
   protected _entityManager: EntitySystemManager;
