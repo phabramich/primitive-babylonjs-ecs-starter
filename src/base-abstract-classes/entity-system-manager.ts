@@ -1,5 +1,5 @@
 import Entity from "./entity";
-import System from "./system";
+import System from "../system";
 
 export default class EntitySystemManager {
 
@@ -25,11 +25,12 @@ export default class EntitySystemManager {
     return this._entitiesMap.get(n);
   }
 
-  Filter(callback: () => boolean): Entity[] {
+  Filter(callback: (e: Entity) => boolean): Entity[] {
     return this._entities.filter(callback);
   }
 
-  Add(e: Entity, n?: string): void {
+  Add(e: Entity): void {
+    let n = e.Name;
     if (!n || this._entitiesMap.has(n)) {
       n = this._GenerateName(n);
     }
@@ -57,13 +58,14 @@ export default class EntitySystemManager {
   }
 
   AddSystem(s: System): void {
-    this._systems.push(s)
+    s.SetParent(this);
+    this._systems.push(s);
+    s.Init();
   }
 
   Update(animRatio: number): void {
     for (const s of this._systems) {
-      // e.Update(timeElapsed);
-      
+      s.Update(animRatio);
     }
   }
 }

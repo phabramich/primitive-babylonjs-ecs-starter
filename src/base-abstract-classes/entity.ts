@@ -1,5 +1,6 @@
 import Component from "./component";
 import EntitySystemManager from "./entity-system-manager";
+import RotateAroundTransformnode from "../rotate-arount-component";
 
 export type Message = {
   topic: string;
@@ -52,12 +53,17 @@ export default class Entity {
     return this._components[n] as T;
   }
 
+  HasComponents(names: string[]): boolean {
+    return names.every(n => n in this._components);
+  }
+
   FindEntity(n: string): Entity | undefined {
     return this._entityManager.Get(n);
   }
 
   Broadcast(msg: Message) {
     if (!(msg.topic in this._handlers)) {
+      console.log(this._name, msg.topic, msg.value);
       return;
     }
 
@@ -66,6 +72,7 @@ export default class Entity {
     }
   }
 
+  // Can be added, if we threw away -systems- from our scheme
   // Update(timeElapsed) {
   //   for (let k in this._components) {
   //     this._components[k].Update(timeElapsed);

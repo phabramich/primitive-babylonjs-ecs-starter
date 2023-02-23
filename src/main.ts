@@ -1,7 +1,7 @@
-import DemoApp from "./demo-app";
+import App from "./app";
 
-let _APP: DemoApp | null = null;
+let _APP: App | null = null;
 
 window.addEventListener('DOMContentLoaded', () => {
-  _APP = new DemoApp();
+  _APP = new App();
 });

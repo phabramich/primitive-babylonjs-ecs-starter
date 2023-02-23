@@ -1,9 +1,10 @@
-import Component from "./component";
+import Component from "../base-abstract-classes/component";
 
 export default class SceneNodeComponent extends Component {
   transformNode: BABYLON.TransformNode
 
   position: BABYLON.Vector3;
+  rotation: BABYLON.Quaternion;
   parent: BABYLON.TransformNode | null;
   scene: BABYLON.Scene;
 
@@ -18,9 +19,10 @@ export default class SceneNodeComponent extends Component {
     this.transformNode = new BABYLON.TransformNode(this._parentEntity.Name, this.scene);
     this.transformNode.position = this.position;
     this.transformNode.parent = this.parent;
+    this.rotation = new BABYLON.Quaternion();
+    this.transformNode.rotationQuaternion = this.rotation;
   }
 
-  
   SetPosition(p: BABYLON.Vector3) {
     this.transformNode.position.copyFrom(p);
     this.Broadcast({

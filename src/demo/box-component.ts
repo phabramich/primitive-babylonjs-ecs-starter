@@ -1,7 +1,5 @@
-import "babylonjs"
-import Component from "./component";
-import Entity from "./entity";
-import SceneNodeComponent from "./scene-node-component";
+import Component from "../base-abstract-classes/component";
+import SceneNodeComponent from "../vital-components/scene-node-component";
 
 export default class BoxComponent extends Component {
   private _params: { startingPosition: BABYLON.Vector3 };
