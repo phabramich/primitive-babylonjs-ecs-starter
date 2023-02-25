@@ -1,66 +1,60 @@
 import "babylonjs"
-import EntitySystemManager from "./base-abstract-classes/entity-system-manager";
-import Entity from "./base-abstract-classes/entity";
-import BoxComponent from "./demo/box-component";
+import EntitySystemManager from "./core/entity-manager";
+import Entity from "./core/entity";
 import RotateAroundTransformnode from "./demo/rotate-around-component";
-import SceneNodeComponent from "./vital-components/scene-node-component";
-import RotateAroundSystem from "./demo/rotate-system";
+import Transform from "./vital-components/transform";
+import { Engine, Scene, Vector3 } from "babylonjs";
 
 export default class App {
   public canvas: HTMLCanvasElement;
-  public engine: BABYLON.Engine;
-  private _scene: BABYLON.Scene
+  public engine: Engine;
+  private _scene: Scene
   private _entityManager: EntitySystemManager;
   constructor() {
-    this._Initialize();
+    this._initialize();
   }
 
-  _Initialize() {
+  _initialize() {
     const canvas = document.getElementById('babylon-canvas') as HTMLCanvasElement;
     this.canvas = canvas;
-    this.engine = new BABYLON.Engine(this.canvas);
-    this._scene = new BABYLON.Scene(this.engine);
+    this.engine = new Engine(this.canvas);
+    this._scene = new Scene(this.engine);
 
-    this._CreateEnvironment();
+    this._createEnvironment();
 
     this._entityManager = new EntitySystemManager();
 
-    this._LoadDemo();
+    this._loadDemo();
 
     this.engine.runRenderLoop(() => {
       this._scene.render();
-      this._Step(this._scene.getAnimationRatio());
+      this._step(this._scene.getAnimationRatio());
     });
   }
 
-  _CreateEnvironment() {
+  _createEnvironment() {
     this._scene.createDefaultCameraOrLight(false, true, true);
     this._scene.createDefaultEnvironment();
   }
 
-  _LoadDemo() {
+  _loadDemo() {
     const e = new Entity("box1");
-    e.AddComponent(new SceneNodeComponent(new BABYLON.Vector3(0, 1, 2), this._scene))
-    e.AddComponent(new BoxComponent({ startingPosition: new BABYLON.Vector3(0, -1, -2) }));
-    e.AddComponent(new RotateAroundTransformnode(1));
-    this._entityManager.Add(e);
+    e.addComponent(new Transform({ initialPosition: new Vector3(0, 1, 2) }, this._scene))
+    e.addComponent(new RotateAroundTransformnode(1));
+    this._entityManager.add(e);
 
     const e2 = new Entity("box2");
-    e2.AddComponent(new SceneNodeComponent(new BABYLON.Vector3(2, 2, 2), this._scene))
-    e2.AddComponent(new BoxComponent({ startingPosition: new BABYLON.Vector3() }));
-    e2.AddComponent(new RotateAroundTransformnode(10));
-    this._entityManager.Add(e2);
+    e2.addComponent(new Transform({ initialPosition: new Vector3(2, 2, 2) }, this._scene))
+    e2.addComponent(new RotateAroundTransformnode(10));
+    this._entityManager.add(e2);
 
     const e3 = new Entity("box3");
-    e3.AddComponent(new SceneNodeComponent(new BABYLON.Vector3(0, 1, 0), this._scene))
-    e3.AddComponent(new BoxComponent({ startingPosition: new BABYLON.Vector3(2, 2, 2) }));
-    e3.AddComponent(new RotateAroundTransformnode(2));
-    this._entityManager.Add(e3);
-
-    this._entityManager.AddSystem(new RotateAroundSystem());
+    e3.addComponent(new Transform({ initialPosition: new Vector3(0, 1, 0) }, this._scene))
+    e3.addComponent(new RotateAroundTransformnode(2));
+    this._entityManager.add(e3);
   }
 
-  _Step(animRatio: number) {
-    this._entityManager.Update(animRatio);
+  _step(animRatio: number) {
+    this._entityManager.update(animRatio);
   }
 }
